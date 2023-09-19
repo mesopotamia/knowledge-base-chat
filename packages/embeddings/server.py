@@ -1,6 +1,8 @@
 from typing import Union
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from langchain.vectorstores.pgvector import PGVector
 from langchain.embeddings import HuggingFaceEmbeddings
 
@@ -18,7 +20,16 @@ newDB = PGVector(connection_string=CONNECTION_STRING, collection_name=COLLECTION
 
 
 app = FastAPI()
+origins = [
+    "*",
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=["*"],
+    allow_headers=["Content-Type"],
+)
 
 @app.get("/")
 def read_root():
